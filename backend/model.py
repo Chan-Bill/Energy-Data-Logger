@@ -31,7 +31,7 @@ class PandasModel(QAbstractTableModel):
 class LoggerModel:
     def __init__(self, db_path='/home/andrew/Documents/database/records.db'):
         self.db_path = db_path
-        self._create_households_tables()
+        # self._create_households_tables()
 
     def _create_households_tables(self):
         with sqlite3.connect(self.db_path) as conn:

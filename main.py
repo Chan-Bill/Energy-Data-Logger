@@ -1,10 +1,13 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QFileDialog
 from frontend.view import Ui_MainWindow
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 from backend.model import LoggerModel, PandasModel
+from backend.data_path import CheckDbPath
+
+import os
 
 
 class Household:
@@ -54,10 +57,14 @@ class HouseholdView(QMainWindow, Ui_MainWindow):
         self.model = model
         self.controller = controller
 
+        self.dialog_widget = DialogWidgets()
+
         self.setup_connections()
-        self.setup_comboboxes()
+        # self.setup_comboboxes()
         
-        self.setup_canvases()
+        # self.setup_canvases()
+
+        
         
     def setup_canvases(self):
         self.figure = plt.figure()
@@ -121,7 +128,8 @@ class HouseholdView(QMainWindow, Ui_MainWindow):
         self.pushButton_3.clicked.connect(self.register_household)
         self.pushButton_4.clicked.connect(self.activate_household)
         self.pushButton_5.clicked.connect(self.delete_household)
-        self.pushButton.clicked.connect(self.display_all_visualization)
+        self.pushButton.clicked.connect(self.check_database_path)
+        # self.pushButton.clicked.connect(self.display_all_visualization)
         
 
     def setup_comboboxes(self):
@@ -152,6 +160,22 @@ class HouseholdView(QMainWindow, Ui_MainWindow):
         msg_box.setWindowTitle("Error")
         msg_box.setText(message)
         msg_box.exec_()
+
+    #------------------------------------------------------------------------------------
+    def check_database_path(self):
+        checker = CheckDbPath(self.lineEdit_6, self.statusbar)
+        checker.check(self.dialog_widget.get_file_from_explorer)
+
+
+class DialogWidgets(QMainWindow):
+
+    def get_file_from_explorer(self):
+        documents_path = os.path.expanduser('~/Documents')
+        file_name = QFileDialog.getOpenFileName(self, 'Open file', documents_path)
+        if file_name[0]:
+            return file_name[0]
+        else:
+            return False
 
 
 if __name__ == "__main__":
