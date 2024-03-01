@@ -1,0 +1,15 @@
+id,temperature,energy,person,datetime,household
+1,27.3,291.5,6,22/12/2023 10:00,Carnice Residence
+2,27.8,82.1,6,22/12/2023 11:00,Carnice Residence
+3,28.5,343.2,7,22/12/2023 12:00,Carnice Residence
+4,28.5,112.4,6,22/12/2023 13:00,Carnice Residence
+5,28.7,113.7,6,22/12/2023 14:00,Carnice Residence
+6,28.5,76.4,3,22/12/2023 15:00,Carnice Residence
+7,28.2,75.5,3,22/12/2023 16:00,Carnice Residence
+8,27.9,75.5,4,22/12/2023 17:00,Carnice Residence
+9,27.2,94.7,4,22/12/2023 18:00,Carnice Residence
+10,26.9,357.1,4,22/12/2023 19:00,Carnice Residence
+11,26.9,83.5,4,22/12/2023 20:00,Carnice Residence
+12,26.8,85.8,4,22/12/2023 21:00,Carnice Residence
+13,26.8,82.3,4,22/12/2023 22:00,Carnice Residence
+14,26.7,74.3,4,22/12/2023 23:00,Carnice Residence
