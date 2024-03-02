@@ -64,7 +64,6 @@ class LoggerModel:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute('DELETE FROM households WHERE id = ?', (household_id,))
-            cursor.execute('DELETE FROM households_data WHERE household_id = ?', (household_id,))
             cursor.execute('DELETE FROM active_household WHERE household_id = ?', (household_id,))
             conn.commit()
 
