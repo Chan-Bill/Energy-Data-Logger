@@ -1,13 +1,7 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication
 from frontend.view import Ui_MainWindow
 
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-
-from backend.model import LoggerModel, PandasModel
-from backend.data_path import CheckDbPath
-
-import os
+from backend.model import LoggerModel
 
 
 class Household:
@@ -57,125 +51,163 @@ class HouseholdView(QMainWindow, Ui_MainWindow):
         self.model = model
         self.controller = controller
 
-        self.dialog_widget = DialogWidgets()
+        self.window_activate = ActivateTab(ui=self, controller=self.controller)
+        self.window_activate.run()
 
+        self.window_register = RegisterTab(ui=self, controller=self.controller)
+        self.window_register.run()
+
+        self.window_delete = RemoveTab(ui=self, controller=self.controller)
+        self.window_delete.run()
+
+
+class ComboboxUpdate:
+
+    def __init__(self, comboboxes: list, controller) -> None:
+        self.comboboxes = comboboxes
+        self.controller = controller
+
+    def update_combobox(self):
+        for combo in self.comboboxes:
+            combo.clear()
+            items = self.controller.get_registered_households()
+            combo.addItems([item["name"] for item in items])
+
+
+class ActivateTab:
+
+    def __init__(self, ui, controller):
+        self.ui = ui
+        self.controller = controller
+
+    def run(self):
         self.setup_connections()
-        # self.setup_comboboxes()
-        
-        # self.setup_canvases()
+        self._update_lineedit_id()
 
-        
-        
-    def setup_canvases(self):
-        self.figure = plt.figure()
-        self.canvas = FigureCanvas(self.figure)
-        self.horizontalLayout_10.addWidget(self.canvas)
+    def setup_connections(self):
+        self.setup_update_combobox()
+        self.setup_lineedit()
+        self.setup_save_button()
+        self.setup_activate_button()
 
-    def register_household(self):
-        household_name = self.lineEdit.text()
+    def setup_update_combobox(self):
+        combobox = ComboboxUpdate([self.ui.comboBox_2, self.ui.comboBox_3], self.controller)
+        combobox.update_combobox()
+
+    def setup_lineedit(self):
+        self.ui.comboBox_2.currentIndexChanged.connect(self._update_lineedit_id)
+
+    def _update_lineedit_id(self):
+        selected_text = self.ui.comboBox_2.currentText()
+        try:
+            household_id = str(self.controller.get_household_id(selected_text))
+            self.ui.lineEdit_5.setText(household_id)
+        except TypeError as e:
+            self.ui.status_bar.showMessage(str(e), 10000)
+
+    def setup_save_button(self):
+        self.ui.pushButton_4.clicked.connect(self._activate_household)
+
+    def _activate_household(self):
+        if self.ui.lineEdit_5.text() != 'None' and self.ui.comboBox_2.currentText() != '':
+            active_household = {
+                'id': self.ui.lineEdit_5.text(),
+                'name': self.ui.comboBox_2.currentText(),
+            }
+            self.controller.activate_household(active_household)
+            self._update_active_household_lineedit()
+
+    def _update_active_household_lineedit(self):
+        saved_active_household = self.controller.get_active_household()
+        if saved_active_household != None:
+            self.ui.lineEdit_2.setText(saved_active_household["name"])
+        else:
+            self.ui.lineEdit_2.setText("")
+
+    def setup_activate_button(self):
+        self.ui.pushButton.clicked.connect(self._switch_to_activate_tab)
+
+    def _switch_to_activate_tab(self):
+        self.ui.stackedWidget.setCurrentIndex(0)
+
+
+class RegisterTab:
+
+    def __init__(self, ui, controller):
+        self.ui = ui
+        self.controller = controller
+
+    def run(self):
+        self.setup_add_button()
+        self.setup_register_button()
+
+    def setup_add_button(self):
+        self.ui.pushButton_3.clicked.connect(self._register_household)
+
+    def _register_household(self):
+        household_name = self.ui.lineEdit.text()
 
         if not household_name:
-            self.show_error_message("Household name cannot be empty.")
+            self.ui.statusbar.showMessage("Household name cannot be empty.", 10000)
             return
         
         try:
-            self.controller.register_new_household(household_name, self.spinBox.value())
-            self.update_comboboxes()
+            self.controller.register_new_household(household_name, self.ui.spinBox.value())
+            self.setup_update_combobox()
         except ValueError as e:
-            self.show_error_message(str(e))
+            self.ui.statusbar.showMessage(str(e), 10000)
+
+    def setup_update_combobox(self):
+        combobox = ComboboxUpdate([self.ui.comboBox_2, self.ui.comboBox_3], self.controller)
+        combobox.update_combobox()
+
+    def setup_register_button(self):
+        self.ui.pushButton_2.clicked.connect(self._switch_to_register_tab)
+
+    def _switch_to_register_tab(self):
+        self.ui.stackedWidget.setCurrentIndex(1)
+
+
+class RemoveTab:
+
+    def __init__(self, ui, controller):
+        self.ui = ui
+        self.controller = controller
+
+    def run(self):
+        self.setup_connection()
+        self._update_lineedit_id()
+        
+    def setup_connection(self):
+        self.ui.pushButton_5.clicked.connect(self.delete_household)
+        self.setup_remove_button()
+        self.setup_lineedit()
 
     def delete_household(self):
-        household_id = self.lineEdit_4.text()
+        household_id = self.ui.lineEdit_4.text()
         self.controller.delete_household(household_id)
-        self.update_comboboxes()
-        self.update_active_household_lineedit()
-
-    def activate_household(self):
-        if self.lineEdit_5.text() != 'None' and self.comboBox_2.currentText() != '':
-            active_household = {
-                'id': self.lineEdit_5.text(),
-                'name': self.comboBox_2.currentText(),
-            }
-            self.controller.activate_household(active_household)
-            self.update_active_household_lineedit()
-
-    def update_active_household_lineedit(self):
-        saved_active_household = self.controller.get_active_household()
-        if saved_active_household != None:
-            self.lineEdit_2.setText(saved_active_household["name"])
-        else:
-            self.lineEdit_2.setText("")
-            
-    def display_all_visualization(self):
-        self.display_data_log()
-        self.display_linear_regression()
+        self.setup_update_combobox()
     
-            
-    def display_data_log(self):
-        data = self.controller.get_all_sensor_data(household=self.comboBox.currentText())
-        model = PandasModel(data)
-        self.tableView.setModel(model)
-        
-    
-        
+    def setup_lineedit(self):
+        self.ui.comboBox_3.currentIndexChanged.connect(self._update_lineedit_id)
 
-    def update_comboboxes(self):
-        self.setup_combobox(self.comboBox_2, self.lineEdit_5)
-        self.setup_combobox(self.comboBox_3, self.lineEdit_4)
-        self.setup_combobox(self.comboBox)
-
-    def setup_connections(self):
-        self.pushButton_3.clicked.connect(self.register_household)
-        self.pushButton_4.clicked.connect(self.activate_household)
-        self.pushButton_5.clicked.connect(self.delete_household)
-        self.pushButton.clicked.connect(self.check_database_path)
-        # self.pushButton.clicked.connect(self.display_all_visualization)
-        
-
-    def setup_comboboxes(self):
-        self.setup_combobox(self.comboBox_2, self.lineEdit_5)
-        self.setup_combobox(self.comboBox_3, self.lineEdit_4)
-        self.setup_combobox(self.comboBox)
-
-    def setup_combobox(self, combobox, related_lineedit = None):
-        combobox.clear()
-        items = self.controller.get_registered_households()
-        combobox.addItems([item["name"] for item in items])
-
-        if related_lineedit != None:
-            self.handle_combobox_change(combobox, related_lineedit)
-            combobox.currentIndexChanged.connect(lambda: self.handle_combobox_change(combobox, related_lineedit))
-
-    def handle_combobox_change(self, combobox, related_lineedit):
-        selected_text = combobox.currentText()
+    def _update_lineedit_id(self):
+        selected_text = self.ui.comboBox_3.currentText()
         try:
             household_id = str(self.controller.get_household_id(selected_text))
-            related_lineedit.setText(household_id)
+            self.ui.lineEdit_4.setText(household_id)
         except TypeError as e:
-            print(str(e))
+            self.ui.status_bar.showMessage(str(e), 10000)
 
-    def show_error_message(self, message):
-        msg_box = QMessageBox()
-        msg_box.setIcon(QMessageBox.Critical)
-        msg_box.setWindowTitle("Error")
-        msg_box.setText(message)
-        msg_box.exec_()
+    def setup_update_combobox(self):
+        combobox = ComboboxUpdate([self.ui.comboBox_2, self.ui.comboBox_3], self.controller)
+        combobox.update_combobox()
 
-    #------------------------------------------------------------------------------------
-    def check_database_path(self):
-        checker = CheckDbPath(self.lineEdit_6, self.statusbar)
-        checker.check(self.dialog_widget.get_file_from_explorer)
+    def setup_remove_button(self):
+        self.ui.pushButton_6.clicked.connect(self._switch_to_remove_tab)
 
-
-class DialogWidgets(QMainWindow):
-
-    def get_file_from_explorer(self):
-        documents_path = os.path.expanduser('~/Documents')
-        file_name = QFileDialog.getOpenFileName(self, 'Open file', documents_path)
-        if file_name[0]:
-            return file_name[0]
-        else:
-            return False
+    def _switch_to_remove_tab(self):
+        self.ui.stackedWidget.setCurrentIndex(2)
 
 
 if __name__ == "__main__":
