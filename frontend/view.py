@@ -15,6 +15,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(796, 328)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("ui\\../icons/Computer Management.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -46,9 +49,9 @@ class Ui_MainWindow(object):
 "                color: blue; /* Text color changes to blue on hover */\n"
 "                text-decoration: underline; /* Underline text on hover */\n"
 "            }")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("ui\\../icons/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton.setIcon(icon)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("ui\\../icons/Go.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton.setIcon(icon1)
         self.pushButton.setIconSize(QtCore.QSize(18, 18))
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout.addWidget(self.pushButton)
@@ -70,9 +73,9 @@ class Ui_MainWindow(object):
 "                color: blue; /* Text color changes to blue on hover */\n"
 "                text-decoration: underline; /* Underline text on hover */\n"
 "            }")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("ui\\../icons/Add.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_2.setIcon(icon1)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("ui\\../icons/Add.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_2.setIcon(icon2)
         self.pushButton_2.setIconSize(QtCore.QSize(18, 18))
         self.pushButton_2.setObjectName("pushButton_2")
         self.verticalLayout.addWidget(self.pushButton_2)
@@ -94,9 +97,9 @@ class Ui_MainWindow(object):
 "                color: blue; /* Text color changes to blue on hover */\n"
 "                text-decoration: underline; /* Underline text on hover */\n"
 "            }")
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("ui\\../icons/Delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_6.setIcon(icon2)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap("ui\\../icons/Delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_6.setIcon(icon3)
         self.pushButton_6.setIconSize(QtCore.QSize(18, 18))
         self.pushButton_6.setObjectName("pushButton_6")
         self.verticalLayout.addWidget(self.pushButton_6)
@@ -212,9 +215,9 @@ class Ui_MainWindow(object):
 "                color: blue; /* Text color changes to blue on hover */\n"
 "                text-decoration: underline; /* Underline text on hover */\n"
 "            }")
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("ui\\../icons/Save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_4.setIcon(icon3)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap("ui\\../icons/Save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_4.setIcon(icon4)
         self.pushButton_4.setIconSize(QtCore.QSize(18, 18))
         self.pushButton_4.setObjectName("pushButton_4")
         self.verticalLayout_8.addWidget(self.pushButton_4)
@@ -307,7 +310,7 @@ class Ui_MainWindow(object):
 "                color: blue; /* Text color changes to blue on hover */\n"
 "                text-decoration: underline; /* Underline text on hover */\n"
 "            }")
-        self.pushButton_3.setIcon(icon1)
+        self.pushButton_3.setIcon(icon2)
         self.pushButton_3.setIconSize(QtCore.QSize(18, 18))
         self.pushButton_3.setObjectName("pushButton_3")
         self.verticalLayout_7.addWidget(self.pushButton_3)
@@ -381,7 +384,7 @@ class Ui_MainWindow(object):
 "                color: blue; /* Text color changes to blue on hover */\n"
 "                text-decoration: underline; /* Underline text on hover */\n"
 "            }")
-        self.pushButton_5.setIcon(icon2)
+        self.pushButton_5.setIcon(icon3)
         self.pushButton_5.setIconSize(QtCore.QSize(18, 18))
         self.pushButton_5.setObjectName("pushButton_5")
         self.verticalLayout_3.addWidget(self.pushButton_5)
@@ -399,12 +402,12 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Energy Data Logger Setup (v1.0.0)"))
         self.pushButton.setText(_translate("MainWindow", "Activate"))
         self.pushButton_2.setText(_translate("MainWindow", "Register"))
         self.pushButton_6.setText(_translate("MainWindow", "Remove"))
