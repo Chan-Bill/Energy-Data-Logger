@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Energy Data Logger Setup (v1.0.0)</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icons/Computer Management.png</normaloff>../icons/Computer Management.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -206,7 +210,7 @@ QPushButton:hover {
           </font>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="page">
           <layout class="QGridLayout" name="gridLayout_2">
